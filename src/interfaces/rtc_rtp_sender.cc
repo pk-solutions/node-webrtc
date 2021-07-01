@@ -107,6 +107,21 @@ Napi::Value RTCRtpSender::SetParameters(const Napi::CallbackInfo& info) {
   return deferred.Promise();
 }
 
+Napi::Value RTCRtpSender::SetBandwidth(const Napi::CallbackInfo& info) {
+  CREATE_DEFERRED(info.Env(), deffered)
+  CONVERT_ARGS_OR_REJECT_AND_RETURN_NAPI(deferred, info, bandwidth, int)
+  auto parameters = _sender->GetParameters();
+  parameters.encodings[0].max_bitrate_bps = bandwidth;
+  auto error = _sender->SetParameters(parameters);
+  if (error.ok()) {
+    deferred.Resolve(info.Env().Undefined());
+  } else {
+    CONVERT_OR_REJECT_AND_RETURN_NAPI(deferred, &error, reason, Napi::Value)
+    deferred.Reject(reason);
+  }
+  return deferred.Promise();
+}
+
 Napi::Value RTCRtpSender::GetStats(const Napi::CallbackInfo& info) {
   CREATE_DEFERRED(info.Env(), deffered)
   Reject(deferred, Napi::Error::New(info.Env(), "Not yet implemented; file a feature request against node-webrtc"));
@@ -188,6 +203,7 @@ void RTCRtpSender::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor("rtcpTransport", &RTCRtpSender::GetRtcpTransport, nullptr),
     InstanceMethod("getParameters", &RTCRtpSender::GetParameters),
     InstanceMethod("setParameters", &RTCRtpSender::SetParameters),
+    InstanceMethod("setBandwidth", &RTCRtpSender::SetBandwidth),
     InstanceMethod("getStats", &RTCRtpSender::GetStats),
     InstanceMethod("replaceTrack", &RTCRtpSender::ReplaceTrack),
     InstanceMethod("setStreams", &RTCRtpSender::SetStreams),
