@@ -12,8 +12,9 @@ if (process.env.DEBUG) {
 
 if (process.platform === 'win32') {
   args.push('-g');
-  args.push('"Visual Studio 16 2019"');
+  args.push('"Visual Studio 15 2017 Win64"');
 }
+args.push('-DGN_GEN_ARGS=\'proprietary_codecs=true ffmpeg_branding="Chrome"\'');
 
 function main() {
   console.log('Running ncmake ' + args.join(' '));

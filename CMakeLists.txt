@@ -164,7 +164,13 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 else()
   list(APPEND GN_GEN_ARGS is_debug=false)
 endif()
+list(APPEND GN_GEN_ARGS
+  proprietary_codecs=true
+  ffmpeg_branding="Chrome"
+)
+
 string(REPLACE ";" " " GN_GEN_ARGS "${GN_GEN_ARGS}")
+
 
 if(WIN32)
   set(suffix bat)
