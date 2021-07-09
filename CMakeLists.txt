@@ -158,16 +158,21 @@ endif()
 
 if (WIN32)
   list(APPEND GN_GEN_ARGS is_clang=false)
+	list(APPEND GN_GEN_ARGS
+	  proprietary_codecs=true
+	  ffmpeg_branding=\\"Chrome\\"
+	)
+else()
+	list(APPEND GN_GEN_ARGS
+	  proprietary_codecs=true
+	  ffmpeg_branding="Chrome"
+	)
 endif()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   list(APPEND GN_GEN_ARGS is_debug=true)
 else()
   list(APPEND GN_GEN_ARGS is_debug=false)
 endif()
-list(APPEND GN_GEN_ARGS
-  proprietary_codecs=true
-  ffmpeg_branding="Chrome"
-)
 
 string(REPLACE ";" " " GN_GEN_ARGS "${GN_GEN_ARGS}")
 
